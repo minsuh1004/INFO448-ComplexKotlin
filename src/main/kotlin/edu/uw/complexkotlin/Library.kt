@@ -14,13 +14,21 @@ class Library {
 // use fold() to compress the array of strings down into a single string.
 // the final string should look like FIZZBUZZFIZZFIZZBUZZFIZZFIZZBUZZ for 0..15.
 // store this lambda into 'fizzbuzz' so that the tests can call it
-//
-val fizzbuzz : (IntRange) -> String = { nums -> nums.map { when (it) {
-    in listOf(15) -> "FIZZBUZZ"
-    in listOf(3, 6, 9, 12, 15) -> "FIZZ"
-    in listOf(5, 10, 15) -> "BUZZ"
-    else -> ""
-}}.fold("", { acc, elem -> acc + elem } )
+
+val fizzbuzz: (IntRange) -> String = { it.map {
+    num ->          
+        if (num % 3 == 0 && num % 5 == 0 && num > 0) {
+            "FIZZBUZZ"
+        } else if (num % 3 == 0 && num > 0) {
+            "FIZZ"
+        } else if (num % 5 == 0 && num > 0) {
+            "BUZZ"
+        } else {
+            ""
+        }
+    }
+    //.fold("", {firstStr, secondStr -> firstStr + secondStr})
+    .fold("") {firstStr, secondStr -> firstStr + secondStr}
 }
 
 // Example usage
@@ -46,33 +54,31 @@ fun process(message: String, block: (String) -> String): String {
     return ">>> ${message}: {" + block(message) + "}"
 }
 // Create r1 as a lambda that calls process() with message "FOO" and a block that returns "BAR"
-val r1 = { process("FOO") { "BAR"} }
+
+val r1 = {process("FOO") {"BAR"}}
 
 // Create r2 as a lambda that calls process() with message "FOO" and a block that upper-cases 
 // r2_message, and repeats it three times with no spaces: "WOOGAWOOGAWOOGA"
+
 val r2_message = "wooga"
-val r2 = { process("FOO") 
-    {
-        var ret = ""
-        3.times {
-            ret += r2_message.toUpperCase()
-        }
-        ret
-    } 
+val r2 = {process("FOO") {
+        var string = ""
+        string += r2_message.toUpperCase().repeat(3)
+        string
+    }
 }
 
-
 // write an enum-based state machine between talking and thinking
+
 enum class Philosopher {
-    TALKING {
-        override fun signal() = THINKING
-        override fun toString() = "Allow me to suggest an idea..."
-    },
     THINKING {
         override fun signal() = TALKING
         override fun toString() = "Deep thoughts...."
+    },
+    TALKING {
+        override fun signal() = THINKING
+        override fun toString() = "Allow me to suggest an idea..."
     };
-
     abstract fun signal(): Philosopher
 }
 
@@ -80,8 +86,22 @@ enum class Philosopher {
 // that takes a single parameter ("message" of type String)
 // primary constructor should take a String argument ("prompt")
 // when invoked, the Command object should return a String containing the prompt and then the message
+
 class Command(val prompt: String) {
-    public operator fun invoke(message: String): String {
+    operator fun invoke(message: String): String {
         return prompt + message
     }
 }
+
+
+/* Extra Credit:
+Seneca the Younger, full name Lucius Annaeus Seneca, was a Roman Stoic philosopher, statesman, orator, 
+and tragedian who was most famously known for his works in his Letters to Lucilius, which served as one 
+of the most important entry points in the philosophy of Stoicism. He was also known for some of his plays,
+ which were all tragedies, such as Medea, Thyestes, and Phaedra. He was also commonly associated with the 
+Stoicism school of philosophy.
+
+The Stoic school of philosophy believed that the path to achieving a well-lived life is through the practice 
+of demonstrating certain virtues and morals, such as wisdom, justice, courage, and temperance, and developing 
+self-control and fortitude to control any destructive and negative emotions dwelling inside them.
+*/
